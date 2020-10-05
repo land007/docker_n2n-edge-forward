@@ -2,8 +2,9 @@ FROM land007/n2n-edge:latest
 
 MAINTAINER Jia Yiqiu <yiqiujia@hotmail.com>
 
-RUN apt-get update && apt-get install -y python ffmpeg && apt-get clean && \
-	curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+RUN apt-get update && apt-get install -y python ffmpeg && apt-get clean
+ADD install.sh /root/
+RUN chmod +x /root/install.sh && /root/install.sh
 ENV NVM_DIR=/root/.nvm \
 #	SHIPPABLE_NODE_VERSION=v8.11.1
 #	SHIPPABLE_NODE_VERSION=v8.14.0
@@ -23,7 +24,7 @@ ENV PATH $PATH:/root/.nvm/versions/node/$SHIPPABLE_NODE_VERSION/bin
 #RUN mkdir /node
 ADD node /node
 RUN ln -s $HOME/.nvm/versions/node/$SHIPPABLE_NODE_VERSION/lib/node_modules /node && \
-	sed -i 's/\r$//' /node/start.sh && chmod a+x /node/start.sh && \
+#	sed -i 's/\r$//' /node/start.sh && chmod a+x /node/start.sh && \
 	ln -s /node ~/ && ln -s /node /home/land007 && \
 	mv /node /node_
 WORKDIR /node
