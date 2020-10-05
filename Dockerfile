@@ -35,12 +35,22 @@ RUN echo $(date "+%Y-%m-%d_%H:%M:%S") >> /.image_times && \
 	echo "land007/n2n-edge-forward" >> /.image_names && \
 	echo "land007/n2n-edge-forward" > /.image_name
 
+ENV REMOTE_IP=127.0.0.1 \
+	REMOTE_PORT=20022 \
+	REMOTE_IP=0.0.0.0 \
+	REMOTE_PORT=10022 \
+	REMOTE_SSH_IP=192.168.11.11 \
+	REMOTE_SSH_PORT=20022 \
+	REMOTE_SSH_USERNAME=land007 \
+	REMOTE_SSH_PASSWORD=1234567
+
 EXPOSE 80/tcp
 #CMD /check.sh /node ; /etc/init.d/ssh start ; /node/start.sh
 RUN echo "/check.sh /node" >> /task.sh && \
 #RUN echo "supervisor -w /node/ /node/server.js" >> /start.sh && \
-#	echo "/usr/bin/nohup supervisor -w /node/ /node/server.js > /node/node.out 2>&1 &" >> /start.sh
-	echo "supervisor -w /node/ /node/server.js" >> /start.sh
+	echo "/usr/bin/nohup supervisor -w /node/ /node/forward.js > /node/forward.out 2>&1 &" >> /task.sh && \
+	echo "/usr/bin/nohup supervisor -w /node/ /node/server.js > /node/node.out 2>&1 &" >> /task.sh
+#	echo "supervisor -w /node/ /node/server.js" >> /start.sh
 
 #docker build -t land007/n2n-edge-forward:latest .
 #> docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t land007/n2n-edge-forward:latest --push .
